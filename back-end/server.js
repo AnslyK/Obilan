@@ -1,6 +1,7 @@
 var mysql = require('mysql');
 const express = require("express");
 const bodyParser = require("body-parser");
+const config = require("./admin/config.js");
 
 
 //On définit notre objet express nommé app
@@ -40,12 +41,11 @@ require(__dirname + "/controllers/articleController")(articleRouter);
 
 //Connexion à la base de donnée
 
-// TODO: A MODIFIER AVEC LA NOUVELLE BASE
 con = mysql.createConnection({
-    host: "localhost",
-    database: "the_boomer_war",
-    user: "root",
-    password: ""
+    host: config._BDD_HOST_,
+    database: config._BDD_DATABASE_,
+    user: config._BDD_USER_,
+    password: config._BDD_PASSWORD_
 });
 
 try{
