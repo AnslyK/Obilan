@@ -32,7 +32,8 @@ async function signup(req, res) {
                 if(err) throw err
                 return res.status(200).json({
                     text: "Succès",
-                    token: passwordHash.generate(email),
+                    name: pseudo,
+                    token: "user:" + passwordHash.generate(pseudo),
                 });
              })
         }
@@ -61,7 +62,7 @@ async function login(req, res) {
         });
         if(passwordHash.verify(password, result[0].PASSWORD))
         return res.status(200).json({
-            token: passwordHash.generate(email),
+            token: "user:" + passwordHash.generate(result[0].pseudo),
             name: result[0].pseudo,
             text: "Authentification réussi"
         })

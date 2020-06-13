@@ -35,8 +35,10 @@ const userRouter = express.Router();
 app.use("/user", userRouter);
 require(__dirname + "/controllers/userController")(userRouter);
 const articleRouter = express.Router();
-app.use("/article", articleRouter);
-require(__dirname + "/controllers/articleController")(articleRouter);
+
+// Autre route à définir
+/*app.use("/article", articleRouter);
+require(__dirname + "/controllers/articleController")(articleRouter);*/
 
 
 //Connexion à la base de donnée
