@@ -2,13 +2,13 @@
 <div class="container">
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
         <div class="form-group">
-            <label for="lastname">Nom de Famille</label>
-            <input formControlName="firstname" type="text" class="form-control" id="lastname" >
+            <label for="lastName">Nom de Famille</label>
+            <input formControlName="lastName" type="text" class="form-control" id="lastName" >
         </div>
 
         <div class="form-group">
-            <label for="firstname">Prénom</label>
-            <input formControlName="lastname" type="text" class="form-control" id="firstname" >
+            <label for="firstName">Prénom</label>
+            <input formControlName="firstName" type="text" class="form-control" id="firstName" >
         </div>
         
         <div class="form-group">
@@ -28,7 +28,7 @@
 
         <div class="form-check">
             <input type="checkbox" class="form-check-input" id="mature">
-            <label formControlName="mature" for="mature">Majeur</label>
+            <label for="mature">Majeur</label>
         </div>
 
             <!--<button type="submit" class="btn btn-primary">Valider</button>-->
