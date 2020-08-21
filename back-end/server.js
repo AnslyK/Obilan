@@ -31,10 +31,27 @@ app.use(function(req,res, next) {
 });
 
 //Définition du routeur
+//const { userRouter, pizzaRouter, teamRouter, tournamentRouter } = express.Router();
+
 const userRouter = express.Router();
 app.use("/user", userRouter);
 require(__dirname + "/controllers/userController")(userRouter);
-const articleRouter = express.Router();
+
+const pizzaRouter = express.Router();
+app.use("/pizza", pizzaRouter);
+require(__dirname + "/controllers/pizzaController")(pizzaRouter);
+
+const teamRouter = express.Router();
+app.use("/team", teamRouter);
+require(__dirname + "/controllers/teamController")(teamRouter);
+
+const tournamentRouter = express.Router();
+app.use("/tournament", tournamentRouter);
+require(__dirname + "/controllers/tournamentController")(tournamentRouter);
+
+
+
+
 
 // Autre route à définir
 /*app.use("/article", articleRouter);

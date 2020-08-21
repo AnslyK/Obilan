@@ -34,6 +34,8 @@ export class SignupComponent implements OnInit {
     });
   }
 
+  get f() { return this.registerForm.controls; }
+
   onSubmit() {
     this.submitted = true;
 

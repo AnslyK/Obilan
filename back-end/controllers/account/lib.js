@@ -52,7 +52,7 @@ async function login(req, res) {
     });
   }
 
-    // On check si l'utilisateur existe en base
+    // On check si l'utilisateur existe en b-ase
     const findUser = 'SELECT mail, pseudo, PASSWORD FROM player WHERE mail=? OR pseudo=?'
     con.query(findUser, [ email, email ], function(err, result) {
         if(err) throw err
