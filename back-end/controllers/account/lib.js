@@ -1,4 +1,6 @@
 const passwordHash = require("password-hash");
+var config = require('../../config.js');
+var jwt = require('jsonwebtoken');
 
 async function signup(req, res) {
   const { lastName, firstName, pseudo, password, email } = req.body;
@@ -30,10 +32,13 @@ async function signup(req, res) {
             const userData = 'INSERT INTO player ( lastName, firstName, pseudo, password, mature, mail) VALUES (?,?,?,?,b?,?)'
             con.query(userData, [lastName, firstName, pseudo, hashedPassword, mature, email], function(err, result) {
                 if(err) throw err
+                var token = jwt.sign({ id: result.insertId }, config.secret, { expiresIn: 86400 // expire en 24 heures
+                });
+                console.log(token);
                 return res.status(200).json({
                     text: "Succès",
                     name: pseudo,
-                    token: "user:" + passwordHash.generate(pseudo),
+                    token: token /*"user:" + passwordHash.generate(pseudo),*/
                 });
              })
         }
@@ -53,19 +58,23 @@ async function login(req, res) {
   }
 
     // On check si l'utilisateur existe en b-ase
-    const findUser = 'SELECT mail, pseudo, PASSWORD FROM player WHERE mail=? OR pseudo=?'
+    const findUser = 'SELECT id, mail, pseudo, PASSWORD FROM player WHERE mail=? OR pseudo=?'
     con.query(findUser, [ email, email ], function(err, result) {
         if(err) throw err
         if(result.length === 0)
         return res.status(401).json({
           text: "L'utilisateur n'existe pas"
         });
-        if(passwordHash.verify(password, result[0].PASSWORD))
-        return res.status(200).json({
-            token: "user:" + passwordHash.generate(result[0].pseudo),
-            name: result[0].pseudo,
+        
+        if(passwordHash.verify(password, result[0].PASSWORD)) {
+          console.log(result);
+          var token = jwt.sign({ id: result.id }, config.secret, { expiresIn: 86400 // expire en 24 heures
+          });
+          return res.status(200).json({
+            token: token, //"user:" + passwordHash.generate(result[0].pseudo),
             text: "Authentification réussi"
-        })
+          })
+        }
 
         return res.status(402).json({
             text: "probleme password"
@@ -74,8 +83,8 @@ async function login(req, res) {
 }
 
 // test perso pour afficher les utilisateurs enregistrés
-async function list(req, res){
-    const listUser = 'SELECT * FROM user_usr';
+async function list(req, res, next){
+    const listUser = 'SELECT * FROM player';
     con.query(listUser, function(err, result) {
         if(err) throw err
         if (!result)
@@ -86,6 +95,24 @@ async function list(req, res){
             result,
         });
     })
+}
+
+// Pour récupérer les informations contenu dans le token
+async function decodeToken(req, res, next){
+  var token = req.headers['x-access-token'];
+  if (!token) return res.status(401).json({
+    auth: false,
+    message: 'No token provided.'
+  });
+
+  jwt.verify(token, config.secret, function(err, decoded) {
+    if (err) return res.status(500).json({
+      auth: false,
+      message: 'Failed to authenticate token.'
+    });
+
+    res.status(200).json(decoded);
+  });
 }
 
 async function name(req, res){
@@ -112,3 +139,4 @@ exports.signup = signup;
 // perso
 exports.list = list;
 exports.name = name;
+exports.decodeToken = decodeToken;

@@ -2,6 +2,13 @@ const passwordHash = require("password-hash");
 
 async function pseudo(req, res) {
     const { oldPseudo, newPseudo } = req.body;
+
+    if (!oldPseudo || !newPseudo) {
+        return res.status(400).json({
+            text: "Requête invalide"
+        })
+    }
+
     const editPseudo = 'UPDATE player SET pseudo=? WHERE pseudo=?';
     con.query(editPseudo, [ newPseudo, oldPseudo], function(err,result){
         if (err) throw err
@@ -16,6 +23,12 @@ async function pseudo(req, res) {
 
 async function password(req, res) {
     const { pseudo, password } = req.body;
+
+    if (!pseudo || !password){
+        return res.status(400).json({
+            text: "Requête invalide"
+        })
+    }
     const hashedPassword = passwordHash.generate(password);
 
     const editPassword = 'UPDATE player SET password=? WHERE pseudo=?';
@@ -29,14 +42,14 @@ async function password(req, res) {
 
 //TODO: paramètre uniquement modifiable par l'admin
 async function payment(req, res) {
-    const { pseudo, password, payment } = req.body;
+    const { pseudo, payment } = req.body;
 
-
-    if (!verifyPassword(pseudo, password)){
-        res.status(400).json({
-            text: "Error Login",
+    if(!pseudo || !payment){
+        return res.status(400).json({
+            text: "Requête invalide"
         })
-    } 
+    }
+
     const setPayment = 'UPDATE player SET payment=b? WHERE pseudo=?'
     con.query(setPayment, [payment, pseudo], function(err, result){
         if (err) throw err
@@ -46,6 +59,7 @@ async function payment(req, res) {
     })
 }
 
+// Obsolète avec le middleware ?
 function verifyPassword( pseudo, password){
     const hashedPassword = passwordHash.generate(password);
     const request = 'SELECT pseudo, password FROM player WHERE pseudo=? AND password=?';

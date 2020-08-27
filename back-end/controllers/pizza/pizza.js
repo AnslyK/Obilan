@@ -1,4 +1,5 @@
 async function getPizza(req, res){
+    // Return all pizza in base
     const pizza = 'SELECT namePizza, pricePizza FROM pizza';
     con.query(pizza, function(err, result){
         if (err) throw err;
@@ -7,7 +8,6 @@ async function getPizza(req, res){
                 text: "Pas de pizza"
             })
         } else {
-            console.log(result);
             return res.status(200).json({
                 pizza: result,
             })
@@ -16,6 +16,7 @@ async function getPizza(req, res){
 }
 
 async function getPizzaId(req, res){
+    // Get pizza name and return id
     const name = req.params.name;
     const getId = 'SELECT idPizza, namePizza FROM pizza WHERE namePizza=?';
     con.query(getId, name, function(err, result){
@@ -34,6 +35,12 @@ async function getPizzaId(req, res){
 
 async function addPizza(req, res){
     const { namePizza, pricePizza } = req.body;
+
+    if (!namePizza || !pricePizza){ 
+        return res.status(400).json({
+            text: "Requête invalide"
+        })
+    }
 
     const uniquePizza = 'SELECT namePizza FROM pizza WHERE namePizza=?';
     con.query(uniquePizza, namePizza, function(err, result){
@@ -57,6 +64,12 @@ async function addPizza(req, res){
 async function setPrice(req, res){
     const { namePizza, pricePizza } = req.body;
 
+    if (!namePizza || !pricePizza){
+        return res.status(400).json({
+            text: "Requête invalide"
+        })
+    }
+
     const newPrice = 'UPDATE pizza SET pricePizza=? WHERE namePizza=?'
     con.query(newPrice, [ pricePizza, namePizza ], function(err, result){
         if (err) throw err
@@ -67,8 +80,13 @@ async function setPrice(req, res){
 }
 
 async function deletePizza(req, res){
-    console.log(req.body);
     const { namePizza } = req.body;
+
+    if (!namePizza){
+        return res.status(400).json({
+            text: "Requête invalide"
+        })
+    }
 
     const request = 'DELETE FROM pizza WHERE namePizza=?'
 
