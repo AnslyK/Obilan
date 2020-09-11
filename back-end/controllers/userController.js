@@ -1,5 +1,5 @@
 var verifyToken = require('./../auth/VerifyToken.js');
-const account = require('./account/lib.js');
+const account = require('./account/login.js');
 const edit = require('./account/edit.js');
 
 module.exports = function (app) {

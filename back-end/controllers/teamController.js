@@ -4,4 +4,5 @@ module.exports = function (app) {
     //app.(get/post/put/delete)('/team', team.);
     app.get('/all', team.getTeam);
     app.get('/tournament/:id', team.getTeamByTournament);
+    app.post('/createTeam' , team.createTeam);
 }

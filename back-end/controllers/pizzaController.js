@@ -5,9 +5,12 @@ module.exports = function (app) {
     // Gestion des pizzas
     app.get('', pizza.getPizza);
     app.get('/:name', pizza.getPizzaId);
+
     app.post('/add', pizza.addPizza);
+
     app.put('/setPrice', pizza.setPrice);
-    app.delete('/delete', pizza.deletePizza);
+
+    app.delete('', pizza.deletePizza);
 
     // Gestion des commandes
     app.post('/pizzaOrder', pizzaOrder.addPizzaOrder);
