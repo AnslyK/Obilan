@@ -16,7 +16,7 @@ app.use(urlencodedParser);
 app.use(bodyParser.json());
 
 //Définition des CORS
-app.use(function(req,res, next) {
+app.use(function(req, res, next) {
     res.setHeader(
         "Access-Control-Allow-Headers",
         "X-Requested-With,content-type"

@@ -7,13 +7,26 @@ async function createTeam(req, res){
         });
     }
 
-    const create = 'INSERT INTO team (nameTeam, idCaptain, publicTeam, idTeamTournament) VALUES (?,?,?,?)';
-    con.query(create, [ nameTeam, idCaptain, publicTeam, idTeamTournament], function(err, result){
+    // TODO: Check if tournoi is full team. (16 slot ...)
+
+    const tournament = 'SELECT idTournament, slotPlayerTeam FROM teamtournament WHERE idTournament=?';
+    con.query(tournament, [ idTeamTournament ], function(err, result){
         if (err) throw err;
-        res.status(200).json({
-            text: "Success"
-        });
-    });
+        if (result.length === 0){
+            res.status(401).json({
+                text: "Error tournament"
+            })
+        } else {
+            var slotPlayer = result[0].slotPlayerTeam;
+            const create = 'INSERT INTO team (nameTeam, slotPlayer, idCaptain, publicTeam, idTeamTournament) VALUES (?,?,?,b?,?)';
+            con.query(create, [ nameTeam, slotPlayer, idCaptain, publicTeam, idTeamTournament], function(err, result){
+                if (err) throw err;
+                res.status(200).json({
+                    text: "Success"
+                });
+            });
+        }
+    })
 }
 
 async function getTeam(req, res){
