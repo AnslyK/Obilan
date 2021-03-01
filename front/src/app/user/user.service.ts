@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { User } from './_models/user';
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -14,5 +15,9 @@ export class UserService {
 
   register(user: User) {
     return this.http.post(`${this.userUrl}/signup`, user);
+  }
+
+  login(user: User) {
+    return this.http.post(`${this.userUrl}/login`, user);
   }
 }
